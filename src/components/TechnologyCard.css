@@ -1,0 +1,92 @@
+.technology-card {
+  background: white;
+  border-radius: 10px;
+  padding: 20px;
+  margin: 15px 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-left: 4px solid #ccc;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.technology-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.technology-card.completed {
+  border-left-color: #4caf50;
+  background-color: #f8fff8;
+}
+
+.technology-card.in-progress {
+  border-left-color: #ff9800;
+  background-color: #fffaf0;
+}
+
+.technology-card.not-started {
+  border-left-color: #f44336;
+  background-color: #fff5f5;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.card-title {
+  margin: 0;
+  color: #333;
+  font-size: 1.2em;
+}
+
+.status-badge {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.8em;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.status-badge.completed {
+  background-color: #4caf50;
+  color: white;
+}
+
+.status-badge.in-progress {
+  background-color: #ff9800;
+  color: white;
+}
+
+.status-badge.not-started {
+  background-color: #f44336;
+  color: white;
+}
+
+.card-description {
+  color: #666;
+  margin: 0 0 15px 0;
+  line-height: 1.5;
+}
+
+.progress-indicator {
+  text-align: right;
+}
+
+.indicator {
+  font-size: 1.5em;
+  font-weight: bold;
+}
+
+.indicator.completed {
+  color: #4caf50;
+}
+
+.indicator.in-progress {
+  color: #ff9800;
+}
+
+.indicator.not-started {
+  color: #f44336;
+}
