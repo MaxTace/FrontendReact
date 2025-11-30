@@ -1,92 +1,215 @@
 .technology-card {
   background: white;
-  border-radius: 10px;
-  padding: 20px;
-  margin: 15px 0;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  border-left: 4px solid #ccc;
-  transition: transform 0.2s, box-shadow 0.2s;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  border-left: 4px solid #2196f3;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.technology-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #2196f3, #21cbf3);
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
 }
 
 .technology-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
 }
 
-.technology-card.completed {
-  border-left-color: #4caf50;
-  background-color: #f8fff8;
+.technology-card:hover::before {
+  transform: scaleX(1);
 }
 
-.technology-card.in-progress {
-  border-left-color: #ff9800;
-  background-color: #fffaf0;
-}
-
-.technology-card.not-started {
-  border-left-color: #f44336;
-  background-color: #fff5f5;
-}
-
-.card-header {
+.tech-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
+  align-items: flex-start;
+  margin-bottom: 1rem;
 }
 
-.card-title {
+.tech-header h3 {
   margin: 0;
   color: #333;
-  font-size: 1.2em;
+  font-size: 1.3em;
+  font-weight: 600;
+  flex: 1;
+  line-height: 1.3;
 }
 
 .status-badge {
-  padding: 4px 12px;
+  color: white;
+  padding: 0.4rem 0.8rem;
   border-radius: 20px;
-  font-size: 0.8em;
-  font-weight: bold;
+  font-size: 0.75rem;
+  font-weight: 700;
   text-transform: uppercase;
+  letter-spacing: 0.5px;
+  min-width: 80px;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.status-badge.completed {
-  background-color: #4caf50;
-  color: white;
+.status-badge[style*="background-color: #4CAF50"] {
+  background: linear-gradient(135deg, #4caf50, #45a049) !important;
 }
 
-.status-badge.in-progress {
-  background-color: #ff9800;
-  color: white;
+.status-badge[style*="background-color: #FF9800"] {
+  background: linear-gradient(135deg, #ff9800, #f57c00) !important;
 }
 
-.status-badge.not-started {
-  background-color: #f44336;
-  color: white;
+.status-badge[style*="background-color: #F44336"] {
+  background: linear-gradient(135deg, #f44336, #d32f2f) !important;
 }
 
-.card-description {
+.tech-description {
   color: #666;
-  margin: 0 0 15px 0;
+  margin-bottom: 1.25rem;
   line-height: 1.5;
+  font-size: 0.95rem;
 }
 
-.progress-indicator {
-  text-align: right;
+.tech-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
 }
 
-.indicator {
-  font-size: 1.5em;
-  font-weight: bold;
+.category {
+  font-size: 0.85em;
+  color: #888;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
-.indicator.completed {
-  color: #4caf50;
+.category::before {
+  content: "🏷️";
+  font-size: 0.8em;
 }
 
-.indicator.in-progress {
-  color: #ff9800;
+.github-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 0.8rem;
+  color: #666;
+  flex-wrap: wrap;
 }
 
-.indicator.not-started {
-  color: #f44336;
+.stars,
+.language {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  background: #f8f9fa;
+  padding: 0.25rem 0.5rem;
+  border-radius: 12px;
+}
+
+.stars::before {
+  content: "⭐";
+}
+
+.language::before {
+  content: "💻";
+}
+
+.tech-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid #f0f0f0;
+}
+
+.btn-link {
+  color: #2196f3;
+  text-decoration: none;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s ease;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+}
+
+.btn-link:hover {
+  color: #1976d2;
+  background: #f0f8ff;
+  transform: translateX(2px);
+}
+
+.github-link {
+  color: #333;
+  text-decoration: none;
+  font-size: 0.8rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.github-link:hover {
+  background: #f0f0f0;
+  color: #000;
+}
+
+@keyframes cardAppear {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.technology-card {
+  animation: cardAppear 0.4s ease;
+}
+
+@media (max-width: 768px) {
+  .technology-card {
+    padding: 1.25rem;
+  }
+
+  .tech-header {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .status-badge {
+    align-self: flex-start;
+  }
+
+  .tech-actions {
+    flex-direction: column;
+    gap: 0.75rem;
+    align-items: stretch;
+  }
+
+  .btn-link {
+    justify-content: center;
+  }
+
+  .github-info {
+    justify-content: center;
+  }
 }

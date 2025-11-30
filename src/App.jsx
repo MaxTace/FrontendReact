@@ -1,104 +1,314 @@
-import './App.css';
-import { useState } from 'react';
-import ProgressHeader from './components/ProgressHeader';
-import TechnologyCard from './components/TechnologyCard';
-import QuickActions from './components/QuickActions';
-import FilterTabs from './components/FilterTabs';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { useState, useEffect, useMemo } from "react";
+import { ThemeProvider } from "@mui/material/styles";
+import CssBaseline from "@mui/material/CssBaseline";
+import Navigation from "./components/Navigation";
+import Home from "./pages/Home";
+import TechnologyList from "./pages/TechnologyList";
+import TechnologyDetail from "./pages/TechnologyDetail";
+import AddTechnology from "./pages/AddTechnology";
+import Statistics from "./pages/Statistics";
+import Settings from "./pages/Settings";
+import Login from "./pages/Login";
+import Dashboard from "./pages/Dashboard";
+import ProtectedRoute from "./components/ProtectedRoute";
+import useTechnologiesApi from "./hooks/useTechnologiesApi";
+import TechnologySearch from "./components/TechnologySearch";
+import RoadmapImporter from "./components/RoadmapImporter";
+import StudyDeadlineForm from "./components/StudyDeadlineForm";
+import BulkStatusEditor from "./components/BulkStatusEditor";
+import ImportExportTester from "./components/ImportExportTester";
+import NotificationDemo from "./components/NotificationDemo";
+import ResponsiveTestSuite from "./components/ResponsiveTestSuite";
+import { createAppTheme } from "./themes/theme";
+import "./App.css";
 
 function App() {
-  const [technologies, setTechnologies] = useState([
-    { 
-      id: 1, 
-      title: 'React Components', 
-      description: 'Изучение функциональных и классовых компонентов, их жизненного цикла и особенностей', 
-      status: 'not-started' 
-    },
-    { 
-      id: 2, 
-      title: 'JSX Syntax', 
-      description: 'Освоение синтаксиса JSX, работа с выражениями JavaScript в разметке', 
-      status: 'not-started' 
-    },
-    { 
-      id: 3, 
-      title: 'State Management', 
-      description: 'Работа с состоянием компонентов, изучение хуков useState и useEffect', 
-      status: 'not-started' 
-    },
-    { 
-      id: 4, 
-      title: 'Props and Data Flow', 
-      description: 'Передача данных между компонентами через props, однонаправленный поток данных', 
-      status: 'not-started' 
-    },
-    { 
-      id: 5, 
-      title: 'Event Handling', 
-      description: 'Обработка событий в React, работа с формами и пользовательским вводом', 
-      status: 'not-started' 
-    },
-    { 
-      id: 6, 
-      title: 'React Router', 
-      description: 'Настройка маршрутизации в React-приложениях, создание SPA', 
-      status: 'not-started' 
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [username, setUsername] = useState("");
+  const [authChecked, setAuthChecked] = useState(false);
+  const [darkMode, setDarkMode] = useState(false);
+
+  const {
+    technologies,
+    loading,
+    error,
+    refetch,
+    addTechnology,
+    updateTechnology,
+    deleteTechnology,
+  } = useTechnologiesApi();
+
+  useEffect(() => {
+    const checkAuth = () => {
+      const loggedIn = localStorage.getItem("isLoggedIn") === "true";
+      const user = localStorage.getItem("username") || "";
+      const savedDarkMode = localStorage.getItem("darkMode") === "true";
+
+      setIsLoggedIn(loggedIn);
+      setUsername(user);
+      setDarkMode(savedDarkMode);
+      setAuthChecked(true);
+    };
+
+    checkAuth();
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("darkMode", darkMode.toString());
+  }, [darkMode]);
+
+  const theme = useMemo(() => createAppTheme(darkMode), [darkMode]);
+
+  const handleLogin = (user) => {
+    setIsLoggedIn(true);
+    setUsername(user);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("isLoggedIn");
+    localStorage.removeItem("username");
+    setIsLoggedIn(false);
+    setUsername("");
+  };
+
+  const toggleTheme = () => {
+    setDarkMode((prev) => !prev);
+  };
+
+  const handleAddTechnology = async (techData) => {
+    try {
+      await addTechnology(techData);
+    } catch (err) {
+      alert("Ошибка при добавлении технологии: " + err.message);
     }
-  ]);
+  };
 
-  const [activeFilter, setActiveFilter] = useState('all');
+  const handleImportRoadmap = async (techData) => {
+    try {
+      await addTechnology(techData);
+    } catch (err) {
+      alert("Ошибка при импорте технологии: " + err.message);
+    }
+  };
 
-  const handleStatusChange = (id, newStatus) => {
-    setTechnologies(prevTech => 
-      prevTech.map(tech => 
-        tech.id === id ? { ...tech, status: newStatus } : tech
-      )
+  const handleSaveDeadlines = (deadlineData) => {
+    console.log("Сохранение сроков изучения:", deadlineData);
+    alert(
+      `Сроки изучения сохранены для ${deadlineData.technologies.length} технологий`
     );
   };
 
-  const filteredTechnologies = technologies.filter(tech => {
-    switch(activeFilter) {
-      case 'completed':
-        return tech.status === 'completed';
-      case 'in-progress':
-        return tech.status === 'in-progress';
-      case 'not-started':
-        return tech.status === 'not-started';
-      default:
-        return true; // 'all' - показываем все
-    }
-  });
+  const handleBulkStatusUpdate = (updateData) => {
+    console.log("Массовое обновление статусов:", updateData);
+    updateData.techIds.forEach((techId) => {
+      updateTechnology(techId, {
+        status: updateData.newStatus,
+        lastUpdated: updateData.updatedAt,
+      });
+    });
+    alert(`Статусы обновлены для ${updateData.updatedCount} технологий`);
+  };
+
+  if (!authChecked) {
+    return (
+      <div className="app-loading">
+        <div className="spinner-large"></div>
+        <p>Загрузка приложения...</p>
+      </div>
+    );
+  }
 
   return (
-    <div className="App">
-      <ProgressHeader technologies={technologies} />
-      
-      <QuickActions 
-        technologies={technologies}
-        setTechnologies={setTechnologies}
-      />
-      
-      <FilterTabs 
-        activeFilter={activeFilter}
-        setActiveFilter={setActiveFilter}
-        technologies={technologies}
-      />
-      
-      <div className="technologies-container">
-        <h2>Дорожная карта изучения</h2>
-        <div className="technologies-list">
-          {filteredTechnologies.map(tech => (
-            <TechnologyCard
-              key={tech.id}
-              id={tech.id}
-              title={tech.title}
-              description={tech.description}
-              status={tech.status}
-              onStatusChange={handleStatusChange}
-            />
-          ))}
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <Router>
+        <div className="App">
+          <Navigation
+            isLoggedIn={isLoggedIn}
+            username={username}
+            onLogout={handleLogout}
+            darkMode={darkMode}
+            onToggleTheme={toggleTheme}
+          />
+
+          <main className="main-content">
+            <Routes>
+              {/* Публичные маршруты */}
+              <Route
+                path="/"
+                element={
+                  <Home
+                    technologies={technologies}
+                    loading={loading}
+                    error={error}
+                    onRefresh={refetch}
+                  />
+                }
+              />
+
+              <Route path="/login" element={<Login onLogin={handleLogin} />} />
+
+              <Route
+                path="/technologies"
+                element={
+                  <TechnologyList
+                    technologies={technologies}
+                    onUpdateTechnology={updateTechnology}
+                    onDeleteTechnology={deleteTechnology}
+                    loading={loading}
+                  />
+                }
+              />
+
+              <Route
+                path="/technology/:techId"
+                element={
+                  <TechnologyDetail
+                    technologies={technologies}
+                    onUpdateTechnology={updateTechnology}
+                    onDeleteTechnology={deleteTechnology}
+                  />
+                }
+              />
+
+              <Route
+                path="/statistics"
+                element={<Statistics technologies={technologies} />}
+              />
+
+              <Route
+                path="/study-deadlines"
+                element={
+                  <ProtectedRoute isLoggedIn={isLoggedIn}>
+                    <StudyDeadlineForm
+                      technologies={technologies}
+                      onSave={handleSaveDeadlines}
+                      onCancel={() => window.history.back()}
+                    />
+                  </ProtectedRoute>
+                }
+              />
+
+              <Route
+                path="/bulk-status-edit"
+                element={
+                  <ProtectedRoute isLoggedIn={isLoggedIn}>
+                    <BulkStatusEditor
+                      technologies={technologies}
+                      onUpdate={handleBulkStatusUpdate}
+                      onCancel={() => window.history.back()}
+                    />
+                  </ProtectedRoute>
+                }
+              />
+
+              <Route
+                path="/import-export-test"
+                element={
+                  <ProtectedRoute isLoggedIn={isLoggedIn}>
+                    <ImportExportTester />
+                  </ProtectedRoute>
+                }
+              />
+
+              <Route
+                path="/notification-demo"
+                element={
+                  <ProtectedRoute isLoggedIn={isLoggedIn}>
+                    <NotificationDemo />
+                  </ProtectedRoute>
+                }
+              />
+
+              <Route
+                path="/responsive-test"
+                element={
+                  <ProtectedRoute isLoggedIn={isLoggedIn}>
+                    <ResponsiveTestSuite />
+                  </ProtectedRoute>
+                }
+              />
+
+              <Route
+                path="/dashboard"
+                element={
+                  <ProtectedRoute isLoggedIn={isLoggedIn}>
+                    <Dashboard />
+                  </ProtectedRoute>
+                }
+              />
+
+              <Route
+                path="/add-technology"
+                element={
+                  <ProtectedRoute isLoggedIn={isLoggedIn}>
+                    <AddTechnology onAddTechnology={handleAddTechnology} />
+                  </ProtectedRoute>
+                }
+              />
+
+              <Route
+                path="/settings"
+                element={
+                  <ProtectedRoute isLoggedIn={isLoggedIn}>
+                    <Settings technologies={technologies} />
+                  </ProtectedRoute>
+                }
+              />
+
+              <Route
+                path="*"
+                element={
+                  <div
+                    style={{
+                      padding: "40px",
+                      textAlign: "center",
+                      minHeight: "60vh",
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <h1
+                      style={{
+                        fontSize: "4rem",
+                        marginBottom: "1rem",
+                        background: "linear-gradient(45deg, #1976d2, #dc004e)",
+                        backgroundClip: "text",
+                        WebkitBackgroundClip: "text",
+                        WebkitTextFillColor: "transparent",
+                      }}
+                    >
+                      404
+                    </h1>
+                    <p style={{ fontSize: "1.2rem", marginBottom: "2rem" }}>
+                      Запрошенная страница не существует.
+                    </p>
+                    <a
+                      href="/"
+                      style={{
+                        background: "linear-gradient(135deg, #1976d2, #1565c0)",
+                        color: "white",
+                        padding: "12px 32px",
+                        borderRadius: "8px",
+                        textDecoration: "none",
+                        fontWeight: "600",
+                        boxShadow: "0 4px 14px rgba(25, 118, 210, 0.3)",
+                        transition: "all 0.3s ease",
+                      }}
+                    >
+                      Вернуться на главную
+                    </a>
+                  </div>
+                }
+              />
+            </Routes>
+          </main>
         </div>
-      </div>
-    </div>
+      </Router>
+    </ThemeProvider>
   );
 }
 

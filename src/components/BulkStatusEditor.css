@@ -1,0 +1,254 @@
+.bulk-status-editor {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.form-section {
+  margin-bottom: 32px;
+  padding: 20px;
+  border: 1px solid #e1e5e9;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.selection-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #e1e5e9;
+}
+
+.select-all-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.selected-count {
+  font-weight: bold;
+  color: #007bff;
+}
+
+.tech-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.tech-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border: 1px solid #e1e5e9;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tech-item:hover {
+  background-color: #f8f9fa;
+  border-color: #007bff;
+}
+
+.tech-details {
+  flex: 1;
+}
+
+.tech-meta {
+  display: flex;
+  gap: 12px;
+  margin-top: 4px;
+}
+
+.tech-category {
+  font-size: 12px;
+  color: #6c757d;
+  background: #f8f9fa;
+  padding: 2px 8px;
+  border-radius: 12px;
+}
+
+.tech-status {
+  font-size: 12px;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-weight: bold;
+}
+
+.status-not_started {
+  background: #6c757d;
+  color: white;
+}
+
+.status-in_progress {
+  background: #ffc107;
+  color: black;
+}
+
+.status-completed {
+  background: #28a745;
+  color: white;
+}
+
+.status-on_hold {
+  background: #fd7e14;
+  color: white;
+}
+
+.status-cancelled {
+  background: #dc3545;
+  color: white;
+}
+
+.status-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+}
+
+.status-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  border: 2px solid #e1e5e9;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.status-option:hover {
+  border-color: #007bff;
+}
+
+.status-option input:checked + .radio-custom + .status-badge {
+  border-color: #007bff;
+  background-color: #007bff;
+  color: white;
+}
+
+.status-badge {
+  padding: 4px 12px;
+  border-radius: 15px;
+  font-size: 14px;
+  font-weight: bold;
+  border: 2px solid transparent;
+}
+
+.preview-section {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.preview-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.preview-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  background: white;
+  border-radius: 4px;
+}
+
+.status-change {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.change-arrow {
+  color: #6c757d;
+  font-weight: bold;
+}
+
+.old-status {
+  color: #6c757d;
+  text-decoration: line-through;
+}
+
+.new-status {
+  color: #28a745;
+  font-weight: bold;
+}
+
+.checkbox-custom,
+.radio-custom {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #6c757d;
+  border-radius: 4px;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.radio-custom {
+  border-radius: 50%;
+}
+
+.tech-item input:checked + .checkbox-custom,
+.status-option input:checked + .radio-custom {
+  background-color: #007bff;
+  border-color: #007bff;
+}
+
+.tech-item input:checked + .checkbox-custom::after {
+  content: "✓";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.status-option input:checked + .radio-custom::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 8px;
+  height: 8px;
+  background: white;
+  border-radius: 50%;
+}
+
+.tech-item input,
+.status-option input,
+.select-all-label input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+@media (max-width: 768px) {
+  .status-options {
+    grid-template-columns: 1fr;
+  }
+
+  .preview-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+}
